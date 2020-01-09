@@ -18,7 +18,7 @@ library(leaflet.mapboxgl)
 options(mapbox.accessToken = key)
 
 
-
+devtools::install_github("walkerke/tidycensus", force = T)
 # load variables ----------------------------------------------------------
 library(tidycensus)
 library(tidyverse)
@@ -36,31 +36,11 @@ label[1,2] <- "Asian Am"
 label[7,2] <- "Chinese"
 
 # list of state and counties where top MSAs locate ------------------------
-state_list <- c("GA","WI","WA","VA","TX","PA","NY","NJ","NH","MN","MI","MD", "MA","IN","IL","FL","DE","DC","CO","CA", "AZ")
-top_tract <- c("06001", "08001", "11001", "10003", "24003", "27003", "34003", "08005", 
-               "24005", "34005", "36005", "34007", "24009", "25009", "12011", "04013", 
-               "06013", "13013", "24013", "34013", "51013", "08014", "13015", "24015", 
-               "33015", "34015", "48015", "24017", "25017", "33017", "34017", "42017", 
-               "08019", "27019", "34019", "04021", "24021", "25021", "25023", "34023", 
-               "24025", "25025", "27025", "34025", "24027", "34027", "34029", "42029", 
-               "08031", "17031", "24031", "34031", "24033", "34033", "53033", "08035", 
-               "13035", "24035", "34035", "06037", "17037", "27037", "34037", "54037", 
-               "08039", "34039", "48039", "06041", "17043", "51043", "13045", "42045", 
-               "08047", "36047", "51047", "12053", "27053", "53053", "12057", "13057", 
-               "06059", "08059", "27059", "36059", "51059", "55059", "36061", "51061", 
-               "53061", "13063", "17063", "06065", "13067", "06071", "48071", "06073", 
-               "18073", "06075", "13077", "27079", "36079", "06081", "36081", "13085", 
-               "36085", "48085", "12086", "26087", "36087", "13089", "17089", "18089", 
-               "42091", "08093", "17093", "26093", "55093", "27095", "13097", "17097", 
-               "12099", "26099", "12101", "42101", "12103", "36103", "42103", "51107", 
-               "55109", "17111", "18111", "13113", "48113", "51113", "13117", "36119", 
-               "13121", "48121", "27123", "26125", "18127", "13135", "27139", "48139", 
-               "27141", "13143", "26147", "13149", "13151", "51153", "48157", "51157", 
-               "13159", "26163", "27163", "48167", "13171", "27171", "51177", "51179", 
-               "51187", "17197", "13199", "48201", "13211", "13217", "13223", "13227", 
-               "13231", "48231", "13247", "48251", "13255", "48257", "48291", "13297", 
-               "48339", "48367", "48397", "48439", "48473", "48497", "24510", "51510", 
-               "51600", "51610", "51630", "51683", "51685")
+state_list <- c("CA", "CO", "PA", "NJ", "DE", "MD", "DC", "VA", 
+                "WV", "FL", "MO", "IL", "IN", "WI", "MA", "NH", 
+                "MI", "MN", "NY", "NC", "SC", "OR", "WA", "TX")
+counties <- read_csv("ct_topmsa.csv")
+top_ct <- as.vector(counties$GEOID)
 
 
 # total pop at tract level ------------------------------------------------
@@ -71,13 +51,14 @@ tot_tract <- tot_tract %>%
 
 # pulling detailed AA tract-level data ------------------------------------
 asn_tract <- get_acs(table = "B02015", year = 2017, geography = "tract", state = state_list, summary_var = "B02015_001")
-asn_tract <- asn_tract %>% 
+
+dta <- asn_tract %>% 
   select(GEOID, NAME, variable, estimate, summary_est) %>% 
   filter(!variable %in% c("B02015_001", "B02015_023", "B02015_024", "B02015_025")) %>% 
   mutate(variable = str_replace_all(variable, "B02015_", "A")) %>% 
   left_join(tot_tract) %>% 
   mutate(ct_geoid = substr(GEOID, 1, 5)) %>% 
-  filter(ct_geoid %in% top_tract) %>% 
+  filter(ct_geoid %in% top_ct) %>% 
   rename(pop = estimate,
          asn_pop = summary_est) %>% 
   mutate(pct_asn = round(pop / asn_pop, digits = 2),
@@ -87,26 +68,236 @@ asn_tract <- asn_tract %>%
     TRUE ~pct_asn)) %>% 
   mutate(pct_tot = case_when(
     tot_pop == 0 ~NA_real_,
-    TRUE ~pct_tot))
+    TRUE ~pct_tot)) %>% 
+  select(-ct_geoid, -asn_pop, -tot_pop)
 
-top_asn <- asn_tract %>% 
+top_asn_final <- dta %>% 
   group_by(GEOID) %>% 
   arrange(desc(pop)) %>% 
   mutate(rank = row_number()) %>% 
   filter(rank == 1) %>% 
-  mutate(population = scales::comma(pop))
+  mutate(top1 = scales::comma(pop),
+         top2 = case_when(
+           is.na(pct_asn) == F ~paste(as.character(pct_asn*100), "%", sep = ""),
+           TRUE ~as.character(pct_asn))) %>% 
+  mutate(top3 = case_when(
+           is.na(pct_tot) == F ~paste(as.character(pct_tot*100), "%", sep = ""),
+           TRUE ~as.character(pct_tot))) %>% 
+  select(GEOID, NAME, variable, top1, top2, top3, pop, pct_asn, pct_tot) %>% 
+  left_join(label) %>% select(-variable)
 
-dta_asn2 <- asn_tract %>% 
-  select(-ct_geoid) %>% 
-  filter(variable = A002)
+top_asn <- top_asn_final %>% select(-pop, -pct_asn, -pct_tot)
 
-dta_asn2 <- asn_tract %>% 
-  select(-ct_geoid) %>% 
-  filter(variable = A002)
+# generating group specific df --------------------------------------------
+dta <- dta %>% 
+  mutate(poplb = scales::comma(pop)) %>% 
+  mutate(pctlb1 = case_when(
+    is.na(pct_asn)==F ~paste(as.character(pct_asn*100), "%", sep = ""),
+    TRUE ~as.character(pct_asn))) %>% 
+  mutate(pctlb2 = case_when(
+    is.na(pct_tot)==F ~paste(as.character(pct_tot*100), "%", sep = ""),
+    TRUE ~as.character(pct_tot)))
 
-dta_asn2 <- asn_tract %>% 
-  select(-ct_geoid) %>% 
-  filter(variable = A002)
+#group 2
+dta_asn2 <- dta %>% 
+  filter(variable == "A002") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot)
+#group 3
+dta_asn3 <- dta %>% 
+  filter(variable == "A003") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop3 = pop,
+         Ap3 = pct_asn,
+         Tp3 = pct_tot)
+#group 4
+dta_asn4 <- dta %>% 
+  filter(variable == "A004") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop4 = pop,
+         Ap4 = pct_asn,
+         Tp4 = pct_tot)
+#group 5
+dta_asn5 <- dta %>% 
+  filter(variable == "A005") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop5 = pop,
+         Ap5 = pct_asn,
+         Tp5 = pct_tot)
+#group 6
+dta_asn6 <- dta %>% 
+  filter(variable == "A006") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop6 = pop,
+         Ap6 = pct_asn,
+         Tp6 = pct_tot)
+#group 7
+dta_asn7 <- dta %>% 
+  filter(variable == "A007") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop7 = pop,
+         Ap7 = pct_asn,
+         Tp7 = pct_tot)
+#group 8
+dta_asn2 <- dta %>% 
+  filter(variable == "A008") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop8 = pop,
+         Ap8 = pct_asn,
+         Tp8 = pct_tot)
+#group 9
+dta_asn9 <- dta %>% 
+  filter(variable == "A009") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop9 = pop,
+         Ap9 = pct_asn,
+         Tp9 = pct_tot)
+#group 10
+dta_asn10 <- dta %>% 
+  filter(variable == "A010") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop10 = pop,
+         Ap10 = pct_asn,
+         Tp10 = pct_tot)
+#group 11
+dta_asn11 <- dta %>% 
+  filter(variable == "A011") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop11 = pop,
+         Ap11 = pct_asn,
+         Tp11 = pct_tot)
+#group 12
+dta_asn12 <- dta %>% 
+  filter(variable == "A012") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop12 = pop,
+         Ap12 = pct_asn,
+         Tp12 = pct_tot)
+#group 13
+dta_asn13 <- dta %>% 
+  filter(variable == "A013") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop13 = pop,
+         Ap13 = pct_asn,
+         Tp13 = pct_tot)
+#group 14
+dta_asn14 <- dta %>% 
+  filter(variable == "A014") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop14 = pop,
+         Ap14 = pct_asn,
+         Tp14 = pct_tot)
+#group 15
+dta_asn15 <- dta %>% 
+  filter(variable == "A015") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop15 = pop,
+         Ap15 = pct_asn,
+         Tp15 = pct_tot)
+#group 16
+dta_asn16 <- dta %>% 
+  filter(variable == "A016") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop16 = pop,
+         Ap16 = pct_asn,
+         Tp16 = pct_tot)
 
-            # data2 <- get_acs(table = "B01003", year = 2017, geography = "county", cache_table = T)
+dta_asn2 <- dta %>% 
+  filter(variable == "A002") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot)
+#group 17
+dta_asn17 <- dta %>% 
+  filter(variable == "A017") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop17 = pop,
+         Ap17 = pct_asn,
+         Tp17 = pct_tot)
+#group 18
+dta_asn18 <- dta %>% 
+  filter(variable == "A018") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop18 = pop,
+         Ap18 = pct_asn,
+         Tp18 = pct_tot)
+#group 19
+dta_asn19 <- dta %>% 
+  filter(variable == "A019") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop19 = pop,
+         Ap19 = pct_asn,
+         Tp19 = pct_tot)
+#group 20
+dta_asn20 <- dta %>% 
+  filter(variable == "A020") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop20 = pop,
+         Ap20 = pct_asn,
+         Tp20 = pct_tot)
+#group 21
+dta_asn21 <- dta %>% 
+  filter(variable == "A021") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop21 = pop,
+         Ap21 = pct_asn,
+         Tp21 = pct_tot)
+#group 22
+dta_asn22 <- dta %>% 
+  filter(variable == "A022") %>% 
+  left_join(top_asn) %>% 
+  select(-variable) %>% 
+  rename(pop22 = pop,
+         Ap22 = pct_asn,
+         Tp22 = pct_tot)
+
+
+# getting tract-level shapefile -------------------------------------------
+library(tigris)
+library(GISTools)
+library(rgdal)
+# install.packages("rmapshaper")  # install if necessary
+library("sf")
+library("rmapshaper")
+# install.packages("rgeos")
+library(rgeos)
+
+# rm(combined, combined_generalized)
+
+combined <- rbind_tigris(lapply(state_list, function(x){
+  tracts(x, cb = TRUE)}))
+# combined_generalized <- gSimplify(combined, 0.4, topologyPreserve=TRUE)
+combined_generalized = ms_simplify(combined, keep = 0.09)
+
+
+#read in shapefile
+
+merge <- geo_join(combined_generalized, dta_asn2, "GEOID", "GEOID")
+writeOGR(obj=merge, dsn="aa2", layer="aa2", driver="ESRI Shapefile") # this is in geographical projection
+
+
 
