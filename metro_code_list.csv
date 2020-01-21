@@ -1,21 +1,28 @@
-NAMELSAD_2,metro
-"Washington-Arlington-Alexandria, DC-VA-MD-WV Metro Area",1
-"Chicago-Naperville-Elgin, IL-IN-WI Metro Area",2
-"Boston-Cambridge-Newton, MA-NH Metro Area",3
-"Tampa-St. Petersburg-Clearwater, FL Metro Area",4
-"New York-Newark-Jersey City, NY-NJ-PA Metro Area",5
-"Minneapolis-St. Paul-Bloomington, MN-WI Metro Area",6
-"Portland-Vancouver-Hillsboro, OR-WA Metro Area",7
-"Charlotte-Concord-Gastonia, NC-SC Metro Area",8
-"St. Louis, MO-IL Metro Area",9
-"Baltimore-Columbia-Towson, MD Metro Area",10
-"San Antonio-New Braunfels, TX Metro Area",11
-"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD Metro Area",12
-"Orlando-Kissimmee-Sanford, FL Metro Area",13
-"Dallas-Fort Worth-Arlington, TX Metro Area",14
-"Detroit-Warren-Dearborn, MI Metro Area",15
-"Denver-Aurora-Lakewood, CO Metro Area",16
-"Los Angeles-Long Beach-Anaheim, CA Metro Area",17
-"Houston-The Woodlands-Sugar Land, TX Metro Area",18
-"Riverside-San Bernardino-Ontario, CA Metro Area",19
-"Seattle-Tacoma-Bellevue, WA Metro Area",20
+NAMELSAD,metro
+"Atlanta-Sandy Springs-Alpharetta, GA Metro Area",1
+"Boston-Cambridge-Newton, MA-NH Metro Area",2
+"Fayetteville-Springdale-Rogers, AR Metro Area",3
+"Dallas-Fort Worth-Arlington, TX Metro Area",4
+"Detroit-Warren-Dearborn, MI Metro Area",5
+"Chicago-Naperville-Elgin, IL-IN-WI Metro Area",6
+"Anchorage, AK Metro Area",7
+"Houston-The Woodlands-Sugar Land, TX Metro Area",8
+"Kahului-Wailuku-Lahaina, HI Metro Area",9
+"Las Vegas-Henderson-Paradise, NV Metro Area",10
+"Los Angeles-Long Beach-Anaheim, CA Metro Area",11
+"Minneapolis-St. Paul-Bloomington, MN-WI Metro Area",12
+"New York-Newark-Jersey City, NY-NJ-PA Metro Area",13
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD Metro Area",14
+"Phoenix-Mesa-Chandler, AZ Metro Area",15
+"Provo-Orem, UT Metro Area",16
+"Riverside-San Bernardino-Ontario, CA Metro Area",17
+"Sacramento-Roseville-Folsom, CA Metro Area",18
+"Salt Lake City, UT Metro Area",19
+"San Diego-Chula Vista-Carlsbad, CA Metro Area",20
+"San Francisco-Oakland-Berkeley, CA Metro Area",21
+"San Jose-Sunnyvale-Santa Clara, CA Metro Area",22
+"Seattle-Tacoma-Bellevue, WA Metro Area",23
+"Stockton, CA Metro Area",24
+"Urban Honolulu, HI Metro Area",25
+"Washington-Arlington-Alexandria, DC-VA-MD-WV Metro Area",26
+"Portland-Vancouver-Hillsboro, OR-WA Metro Area",27
