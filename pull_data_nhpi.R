@@ -73,6 +73,7 @@ dta <- nhpi_tract %>%
     TRUE ~pct_tot)) %>% 
   dplyr::select(-ct_geoid)
 
+write_csv(dta, "dta_nhpi.csv", na = "")
 #####Top NHPI groups in each census tract
 top_nhpi <- dta %>% 
   group_by(GEOID) %>% 
@@ -104,7 +105,8 @@ top_nhpi_map <- top_nhpi %>%
     TRUE ~pct_nhpi)) %>% 
   mutate(pct_tot = case_when(
     top3 == "0%" ~NA_real_,
-    TRUE ~pct_tot))
+    TRUE ~pct_tot)) %>% 
+  write_csv("Top_NHPIs.csv", na = "")
   
 
 # generating group specific df --------------------------------------------

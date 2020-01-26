@@ -39,7 +39,7 @@ label[7,2] <- "Chinese"
 state_list <- c("CA", "CO", "PA", "NJ", "DE", "MD", "DC", "VA", 
                 "WV", "FL", "MO", "IL", "IN", "WI", "MA", "NH", 
                 "MI", "MN", "NY", "NC", "SC", "OR", "WA", "TX", 
-                "AZ", "HI", "AK", "AR", "UT", "GA")
+                "AZ", "HI", "AK", "AR", "UT", "GA", "NV")
 
 counties <- read_csv("top_metro_ct.csv")
 
@@ -68,13 +68,11 @@ top_ct <- as.vector(counties_slim$ct_geoid)
 # total pop at tract level ------------------------------------------------
 tot_tract <- get_acs(table = "B01003", year = 2017, geography = "tract", state = state_list, cache_table = T)
 tot_tract <- tot_tract %>% 
-  select(GEOID, NAME, estimate) %>% 
+  dplyr::select(GEOID, NAME, estimate) %>% 
   rename(tot_pop = estimate)
 
 # pulling detailed AA tract-level data ------------------------------------
 asn_tract <- get_acs(table = "B02015", year = 2017, geography = "tract", state = state_list, summary_var = "B02015_001", cache_table = T)
-nhpi_tract <- get_acs(table = "B02016", year = 2017, geography = "tract", state = state_list, summary_var = "B02015_001", cache_table = T)
-
 dta <- asn_tract %>% 
   dplyr::select(GEOID, NAME, variable, estimate, summary_est) %>% 
   filter(!variable %in% c("B02015_001", "B02015_023", "B02015_024", "B02015_025")) %>% 
@@ -96,6 +94,8 @@ dta <- asn_tract %>%
     TRUE ~pct_tot)) %>% 
   dplyr::select(-ct_geoid)
 
+write_csv(dta, "dta_aa.csv", na = "")
+
 #######
 top_asn <- dta %>% 
   group_by(GEOID) %>% 
@@ -113,7 +113,8 @@ top_asn <- dta %>%
   left_join(label) %>% dplyr::select(-variable)
 
 top_asn_map <- top_asn %>% 
-  dplyr::select(GEOID, NAME, label, top1, top2, top3, pop, pct_asn, pct_tot, metro)
+  dplyr::select(GEOID, NAME, label, top1, top2, top3, pop, pct_asn, pct_tot, metro) %>% 
+  write_csv("Top_Asians.csv", na = "")
 
 # generating group specific df --------------------------------------------
 dta <- dta %>% 
@@ -138,50 +139,50 @@ dta_asn2 <- dta %>%
 #group 3
 dta_asn3 <- dta %>% 
   filter(variable == "A003") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
+  rename(pop3 = pop,
+         Ap3 = pct_asn,
+         Tp3 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 #group 4
 dta_asn4 <- dta %>% 
   filter(variable == "A004") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
+  rename(pop4 = pop,
+         Ap4 = pct_asn,
+         Tp4 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 #group 5
 dta_asn5 <- dta %>% 
   filter(variable == "A005") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
+  rename(pop5 = pop,
+         Ap5 = pct_asn,
+         Tp5 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 #group 6
 dta_asn6 <- dta %>% 
   filter(variable == "A006") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
+  rename(pop6 = pop,
+         Ap6 = pct_asn,
+         Tp6 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 #group 7
 dta_asn7 <- dta %>% 
   filter(variable == "A007") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
+  rename(pop7 = pop,
+         Ap7 = pct_asn,
+         Tp7 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
 #group 8
 dta_asn8 <- dta %>% 
   filter(variable == "A008") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
+  rename(pop8 = pop,
+         Ap8 = pct_asn,
+         Tp8 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
@@ -197,18 +198,18 @@ dta_asn9 <- dta %>%
 #group 10
 dta_asn10 <- dta %>% 
   filter(variable == "A010") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
+  rename(pop10 = pop,
+         Ap10 = pct_asn,
+         Tp10 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
 #group 11
 dta_asn11 <- dta %>% 
   filter(variable == "A011") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
+  rename(pop11 = pop,
+         Ap11 = pct_asn,
+         Tp11 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
@@ -223,81 +224,73 @@ dta_asn12 <- dta %>%
 #group 13
 dta_asn13 <- dta %>% 
   filter(variable == "A013") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
+  rename(pop13 = pop,
+         Ap13 = pct_asn,
+         Tp13 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
 #group 14
 dta_asn14 <- dta %>% 
   filter(variable == "A014") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
+  rename(pop14 = pop,
+         Ap14 = pct_asn,
+         Tp14 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
 #group 15
 dta_asn15 <- dta %>% 
   filter(variable == "A015") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
+  rename(pop15 = pop,
+         Ap15 = pct_asn,
+         Tp15 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
 #group 16
 dta_asn16 <- dta %>% 
   filter(variable == "A016") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
+  rename(pop16 = pop,
+         Ap16 = pct_asn,
+         Tp16 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
-
-dta_asn2 <- dta %>% 
-  filter(variable == "A002") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
-  left_join(top_asn_map) %>% 
-  dplyr::select(-variable)
 
 #group 17
 dta_asn17 <- dta %>% 
   filter(variable == "A017") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
+  rename(pop17 = pop,
+         Ap17 = pct_asn,
+         Tp17 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
 #group 18
 dta_asn18 <- dta %>% 
   filter(variable == "A018") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
+  rename(pop18 = pop,
+         Ap18 = pct_asn,
+         Tp18 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
 #group 19
 dta_asn19 <- dta %>% 
   filter(variable == "A019") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
+  rename(pop19 = pop,
+         Ap19 = pct_asn,
+         Tp19 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
 #group 20
 dta_asn20 <- dta %>% 
   filter(variable == "A020") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
+  rename(pop20 = pop,
+         Ap20 = pct_asn,
+         Tp20 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
@@ -312,9 +305,9 @@ dta_asn21 <- dta %>%
 #group 22
 dta_asn22 <- dta %>% 
   filter(variable == "A022") %>% 
-  rename(pop2 = pop,
-         Ap2 = pct_asn,
-         Tp2 = pct_tot) %>% 
+  rename(pop22 = pop,
+         Ap22 = pct_asn,
+         Tp22 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
@@ -357,6 +350,53 @@ writeOGR(obj=city_generalized, dsn = "/Users/sunnyshao/Documents/census2020_plan
 ##############
 
 #read in shapefile
+final_pop <- dta %>% 
+  filter(metro == 10) %>% 
+  mutate(group = paste("P", variable, sep = "")) %>% 
+  dplyr::select(GEOID, NAME, group, pop) %>% 
+  spread(group, pop)
+
+final_lb1 <- dta %>% 
+  filter(metro == 10) %>% 
+  mutate(group = paste("lb1", variable, sep = "")) %>% 
+  dplyr::select(GEOID, NAME, group, poplb) %>% 
+  spread(group, poplb)
+
+final_pctaa <- dta %>% 
+  filter(metro == 10) %>% 
+  mutate(group = paste("AP", variable, sep = "")) %>% 
+  dplyr::select(GEOID, NAME, group, pct_asn) %>% 
+  spread(group, pct_asn)
+
+final_lb2 <- dta %>% 
+  filter(metro == 10) %>% 
+  mutate(group = paste("lb2", variable, sep = "")) %>% 
+  dplyr::select(GEOID, NAME, group, pctlb1) %>% 
+  spread(group, pctlb1)
+
+final_pct <- dta %>% 
+  filter(metro == 10) %>% 
+  mutate(group = paste("TP", variable, sep = "")) %>% 
+  dplyr::select(GEOID, NAME, group, pct_tot) %>% 
+  spread(group, pct_tot)
+
+final_lb3 <- dta %>% 
+  filter(metro == 10) %>% 
+  mutate(group = paste("lb3", variable, sep = "")) %>% 
+  dplyr::select(GEOID, NAME, group, pctlb2) %>% 
+  spread(group, pctlb2)
+
+final <- final_pop %>% 
+  left_join(final_pctaa) %>% 
+  left_join(final_pct) %>% 
+  left_join(final_lb1) %>% 
+  left_join(final_lb2) %>% 
+  left_join(final_lb3) %>% 
+  left_join(top_asn_map)
+merge <- geo_join(combined_generalized, final, "GEOID", "GEOID")
+writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/ff", layer="ff", driver="ESRI Shapefile") # this is in geographical projection
+
+
 
 #top Asian Am in each metro area
 merge <- geo_join(combined_generalized, top_asn_map, "GEOID", "GEOID")
