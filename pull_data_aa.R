@@ -477,7 +477,8 @@ rm(dta_asn2, dta_asn3, dta_asn4, dta_asn5, dta_asn6,
    dta_asn12, dta_asn13, dta_asn14, dta_asn15, dta_asn16,
    dta_asn17, dta_asn18, dta_asn19, dta_asn20, dta_asn21,
    dta_asn22, combined_generalized, combined, merge)
-###
+
+#
 sum <- dta %>% 
   filter(metro == 19) %>% 
   dplyr::select(GEOID, NAME, variable, pop, asn_pop, tot_pop, metro) %>% 
