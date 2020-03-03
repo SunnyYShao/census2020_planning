@@ -48,10 +48,10 @@ metro_list <- counties %>%
   unique() %>% 
   mutate(metro = row_number())
 
-metro_geo <- read_csv("/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/topmetro_geoid.csv") %>% 
-  left_join(metro_list)
-
-write_csv(metro_geo, "metro_geo.csv", na = "")
+# metro_geo <- read_csv("/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/topmetro_geoid.csv") %>% 
+#   left_join(metro_list)
+# 
+# write_csv(metro_geo, "metro_geo.csv", na = "")
 
 counties_slim <- counties %>% 
   dplyr::select(-NAMELSAD_2) %>% 
