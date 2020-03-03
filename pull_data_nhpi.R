@@ -4,7 +4,7 @@ library(tidyverse)
 library(stringr)
 
 # getting reference labels ------------------------------------------------
-label <- load_variables(year = 2017, dataset = "acs5", cache = TRUE) %>%
+label <- load_variables(year = 2018, dataset = "acs5", cache = TRUE) %>%
   mutate(keep = str_detect(name, "B02016")) %>% filter(keep == "TRUE") %>%
   separate(label, c("var1", "var2", "var3", "label"), sep = "!!") %>%
   rename(variable = name) %>% dplyr::select(variable, label) %>% 
@@ -43,13 +43,13 @@ counties_slim <- counties_nhpi %>%
 top_ct <- as.vector(counties_slim$ct_geoid)
 
 # total pop at tract level ------------------------------------------------
-tot_tract <- get_acs(table = "B01003", year = 2017, geography = "tract", state = state_list, cache_table = T)
+tot_tract <- get_acs(table = "B01003", year = 2018, geography = "tract", state = state_list, cache_table = T)
 tot_tract <- tot_tract %>% 
   dplyr::select(GEOID, NAME, estimate) %>% 
   rename(tot_pop = estimate)
 
 # pulling detailed AA tract-level data ------------------------------------
-nhpi_tract <- get_acs(table = "B02016", year = 2017, geography = "tract", state = state_list, summary_var = "B02016_001", cache_table = T)
+nhpi_tract <- get_acs(table = "B02016", year = 2018, geography = "tract", state = state_list, summary_var = "B02016_001", cache_table = T)
 
 dta <- nhpi_tract %>% 
   dplyr::select(GEOID, NAME, variable, estimate, summary_est) %>% 
@@ -222,34 +222,34 @@ combined_generalized = ms_simplify(combined, keep = 0.05)
 
 # top NHPI in each metro area ------------------------------------
 merge <- geo_join(combined_generalized, top_nhpi_map, "GEOID", "GEOID")
-writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/topNHPI", layer="toppi", driver="ESRI Shapefile") # this is in geographical projection
+writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/topNHPI", layer="toppi", driver="ESRI Shapefile") # this is in geographical projection
 ##############
 
 # NHPI in each metro area ------------------------------------
 
 #group 2
 merge <- geo_join(combined_generalized, dta_nhpi2, "GEOID", "GEOID")
-writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/pi02", layer="pi02", driver="ESRI Shapefile") # this is in geographical projection
+writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/pi02", layer="pi02", driver="ESRI Shapefile") # this is in geographical projection
 
 #group 3
 merge <- geo_join(combined_generalized, dta_nhpi3, "GEOID", "GEOID")
-writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/pi03", layer="pi03", driver="ESRI Shapefile") # this is in geographical projection
+writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/pi03", layer="pi03", driver="ESRI Shapefile") # this is in geographical projection
 
 #group 4
 merge <- geo_join(combined_generalized, dta_nhpi4, "GEOID", "GEOID")
-writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/pi04", layer="pi04", driver="ESRI Shapefile") # this is in geographical projection
+writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/pi04", layer="pi04", driver="ESRI Shapefile") # this is in geographical projection
 
 #group 6
 merge <- geo_join(combined_generalized, dta_nhpi6, "GEOID", "GEOID")
-writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/pi06", layer="pi06", driver="ESRI Shapefile") # this is in geographical projection
+writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/pi06", layer="pi06", driver="ESRI Shapefile") # this is in geographical projection
 
 #group 7
 merge <- geo_join(combined_generalized, dta_nhpi7, "GEOID", "GEOID")
-writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/pi07", layer="pi07", driver="ESRI Shapefile") # this is in geographical projection
+writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/pi07", layer="pi07", driver="ESRI Shapefile") # this is in geographical projection
 
 #group 9
 merge <- geo_join(combined_generalized, dta_nhpi9, "GEOID", "GEOID")
-writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/pi09", layer="pi09", driver="ESRI Shapefile") # this is in geographical projection
+writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/pi09", layer="pi09", driver="ESRI Shapefile") # this is in geographical projection
 
 
 
