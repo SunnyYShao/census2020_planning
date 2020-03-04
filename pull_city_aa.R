@@ -7,16 +7,27 @@ label <- load_variables(year = 2018, dataset = "acs5", cache = TRUE) %>%
   mutate(keep = str_detect(name, "B02015")) %>% filter(keep == "TRUE") %>%
   separate(label, c("var1", "var2","label"), sep = "!!") %>%
   rename(variable = name) %>% dplyr::select(variable, label) %>% 
-  filter(!variable %in% c("B02015_023", "B02015_024", "B02015_025")) %>% 
-  mutate(variable = str_replace_all(variable, "B02015_", "A"))
+  filter(!variable %in% c("B02015_004", "B02015_005", "B02015_015", 
+                          "B02015_016", "B02015_017", "B02015_023", 
+                          "B02015_024", "B02015_025")) %>% 
+  mutate(order = row_number(),
+         var = paste("G", order, sep = "")) %>% 
+  select(-order)
 label[1,2] <- "Asian Am"
-label[7,2] <- "Chinese"
+label[5,2] <- "Chinese"
 
 label2 <- load_variables(year = 2010, dataset = "acs5", cache = TRUE) %>%
   mutate(keep = str_detect(name, "B02006")) %>% filter(keep == "TRUE") %>%
   separate(label, c("var1", "var2","label"), sep = "!!") %>%
-  dplyr::select(name, label)
+  dplyr::select(name, label) %>% 
+  filter(!name %in% c("B02006_018", "B02006_019")) %>% 
+  rename(variable = name) %>% 
+  mutate(order = row_number(),
+         var = paste("G", order, sep = "")) %>% 
+  select(-order)
+  
 label2[1,2] <- "Asian Am"
+label2[5,2] <- "Chinese"
 
 label <- label %>% left_join(label2)
 # list of state and counties where top MSAs locate ------------------------
@@ -54,73 +65,119 @@ tot_city_2010 <- tot_city_2010 %>%
 
 #asian pop at city level ------------------------------------
 #2010 data
-dta_2010 <- get_acs(table = "B02006", endyear = 2010, geography = "place", state = "CA", summary_var = "B02006_001", cache_table = T)
-dta_2010 <- dta_2010 %>% 
+data <- get_acs(table = "B02006", year = 2010, geography = "place", state = "CA", summary_var = "B02006_001", cache_table = T)
+dta_2010 <- data %>% 
   dplyr::select(GEOID, variable, estimate, summary_est) %>% 
-  filter(!variable %in% c("B02015_001", "B02015_023", "B02015_024", "B02015_025")) %>% 
-  mutate(variable = str_replace_all(variable, "B02015_", "A")) %>% 
+  filter(!variable %in% c("B02006_018", "B02006_019")) %>% 
+  left_join(label2) %>% 
   left_join(tot_city) %>% 
   left_join(city_dta) %>% 
   filter(is.na(NAME)==F) %>% 
   rename(pop = estimate,
          asn_pop = summary_est) %>% 
-  mutate(pct_asn = round(pop / asn_pop, digits = 2),
-         pct_tot = round(pop / tot_pop, digits = 2)) %>% 
-  mutate(pct_asn = case_when(
-    asn_pop == 0 ~NA_real_,
-    TRUE ~pct_asn)) %>% 
-  mutate(pct_tot = case_when(
-    tot_pop == 0 ~NA_real_,
-    TRUE ~pct_tot))
+  rename(est = pop,
+         asn = asn_pop,
+         tot = tot_pop) %>% 
+  dplyr::select(GEOID, est, asn, tot, var, NAME) %>% 
+  gather(key, value, -var, -NAME, -GEOID) %>% 
+  mutate(label = paste(var, key, "10", sep = "")) %>% 
+  select(GEOID, NAME, label, value) %>% 
+  spread(label, value)
 
-top_asn <- dta %>% 
+top_asn_2010 <- data %>% 
+  dplyr::select(GEOID, variable, estimate, summary_est) %>% 
+  filter(!variable %in% c("B02006_018", "B02006_019")) %>% 
+  left_join(label2) %>% 
+  left_join(tot_city) %>% 
+  left_join(city_dta) %>% 
+  filter(is.na(NAME)==F,
+         label != "Asian Am") %>% 
+  rename(pop10 = estimate,
+         asn_pop10 = summary_est,
+         tot_pop10 = tot_pop) %>% 
+  dplyr::select(GEOID, NAME, label, pop10, asn_pop10, tot_pop10) %>% 
   group_by(GEOID) %>% 
-  arrange(desc(pop)) %>% 
+  arrange(desc(pop10)) %>% 
   mutate(rank = row_number()) %>% 
+  ungroup() %>% 
   filter(rank == 1) %>% 
-  mutate(top1 = scales::comma(pop),
-         top2 = case_when(
-           is.na(pct_asn) == F ~paste(as.character(pct_asn*100), "%", sep = ""),
-           TRUE ~as.character(pct_asn))) %>% 
-  mutate(top3 = case_when(
-    is.na(pct_tot) == F ~paste(as.character(pct_tot*100), "%", sep = ""),
-    TRUE ~as.character(pct_tot))) %>% 
-  # dplyr::select(GEOID, NAME, variable, top1, top2, top3, pop, pct_asn, pct_tot, metro) %>% 
-  left_join(label) %>% dplyr::select(-variable)
+  mutate(pct_asn10 = scales::percent(round((pop10 / asn_pop10), digits = 2)),
+         pct_tot10 = scales::percent(round((pop10 / tot_pop10), digits = 2))) %>% 
+  dplyr::select(-rank)
+  
+  
 #2018 data
-dta <- get_acs(table = "B02015", year = 2018, geography = "place", state = "CA", summary_var = "B02015_001", cache_table = T)
-dta <- dta %>% 
+data2 <- get_acs(table = "B02015", year = 2018, geography = "place", state = "CA", summary_var = "B02015_001", cache_table = T)
+dta_2018 <- data2 %>% 
   dplyr::select(GEOID, variable, estimate, summary_est) %>% 
-  filter(!variable %in% c("B02015_001", "B02015_023", "B02015_024", "B02015_025")) %>% 
-  mutate(variable = str_replace_all(variable, "B02015_", "A")) %>% 
+  filter(!variable %in% c("B02015_004", "B02015_005", "B02015_015", 
+                          "B02015_016", "B02015_017", "B02015_023", 
+                          "B02015_024", "B02015_025")) %>% 
+left_join(label) %>% 
   left_join(tot_city) %>% 
   left_join(city_dta) %>% 
   filter(is.na(NAME)==F) %>% 
   rename(pop = estimate,
          asn_pop = summary_est) %>% 
-  mutate(pct_asn = round(pop / asn_pop, digits = 2),
-         pct_tot = round(pop / tot_pop, digits = 2)) %>% 
-  mutate(pct_asn = case_when(
-    asn_pop == 0 ~NA_real_,
-    TRUE ~pct_asn)) %>% 
-  mutate(pct_tot = case_when(
-    tot_pop == 0 ~NA_real_,
-    TRUE ~pct_tot))
+  rename(est = pop,
+         asn = asn_pop,
+         tot = tot_pop) %>% 
+  dplyr::select(GEOID, est, asn, tot, var, NAME) %>% 
+  gather(key, value, -var, -NAME, -GEOID) %>% 
+  mutate(label = paste(var, key, "18", sep = "")) %>% 
+  select(GEOID, NAME, label, value) %>% 
+  spread(label, value)
 
-top_asn <- dta %>% 
+top_asn_2018 <- data2 %>% 
+  dplyr::select(GEOID, variable, estimate, summary_est) %>% 
+  filter(!variable %in% c("B02015_004", "B02015_005", "B02015_015", 
+                          "B02015_016", "B02015_017", "B02015_023", 
+                          "B02015_024", "B02015_025")) %>% 
+  left_join(label) %>% 
+  left_join(tot_city) %>% 
+  left_join(city_dta) %>% 
+  filter(is.na(NAME)==F,
+         label != "Asian Am") %>% 
+  rename(pop18 = estimate,
+         asn_pop18 = summary_est,
+         tot_pop18 = tot_pop,
+         label18 = label) %>% 
+  dplyr::select(GEOID, NAME, label18, pop18, asn_pop18, tot_pop18) %>% 
   group_by(GEOID) %>% 
-  arrange(desc(pop)) %>% 
+  arrange(desc(pop18)) %>% 
   mutate(rank = row_number()) %>% 
+  ungroup() %>% 
   filter(rank == 1) %>% 
-  mutate(top1 = scales::comma(pop),
-         top2 = case_when(
-           is.na(pct_asn) == F ~paste(as.character(pct_asn*100), "%", sep = ""),
-           TRUE ~as.character(pct_asn))) %>% 
-  mutate(top3 = case_when(
-    is.na(pct_tot) == F ~paste(as.character(pct_tot*100), "%", sep = ""),
-    TRUE ~as.character(pct_tot))) %>% 
-  # dplyr::select(GEOID, NAME, variable, top1, top2, top3, pop, pct_asn, pct_tot, metro) %>% 
-  left_join(label) %>% dplyr::select(-variable)
+  mutate(pct_asn18 = scales::percent(round((pop18 / asn_pop18), digits = 2)),
+         pct_tot18 = scales::percent(round((pop18 / tot_pop18), digits = 2))) %>% 
+  dplyr::select(-rank)
+
+dta_final <- dta_2018 %>% left_join(dta_2010)
+top_asn <- top_asn_2018 %>% left_join(top_asn_2010)
+
+library(tigris)
+options(tigris_use_cache = T)
+
+library(rappdirs)
+user_cache_dir()
+
+library(GISTools)
+library(rgdal)
+# install.packages("rmapshaper")  # install if necessary
+library(sf)
+library(rmapshaper)
+# install.packages("rgeos")
+library(rgeos)
+merge <- geo_join(city_shape, top_asn, "GEOID", "GEOID")
+writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/sacramento_city/topAA_1018", layer="topaa", driver="ESRI Shapefile") # this is in geographical projection
+
+
+
+
+
+
+
+#archived -------------
 
 #group 2
 dta_asn2 <- dta %>% 
