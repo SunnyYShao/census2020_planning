@@ -139,50 +139,50 @@ dta_asn2 <- dta %>%
 #group 3
 dta_asn3 <- dta %>% 
   filter(variable == "A003") %>% 
-  rename(pop3 = pop,
-         Ap3 = pct_asn,
-         Tp3 = pct_tot) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 #group 4
 dta_asn4 <- dta %>% 
   filter(variable == "A004") %>% 
-  rename(pop4 = pop,
-         Ap4 = pct_asn,
-         Tp4 = pct_tot) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 #group 5
 dta_asn5 <- dta %>% 
   filter(variable == "A005") %>% 
-  rename(pop5 = pop,
-         Ap5 = pct_asn,
-         Tp5 = pct_tot) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 #group 6
 dta_asn6 <- dta %>% 
   filter(variable == "A006") %>% 
-  rename(pop6 = pop,
-         Ap6 = pct_asn,
-         Tp6 = pct_tot) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 #group 7
 dta_asn7 <- dta %>% 
   filter(variable == "A007") %>% 
-  rename(pop7 = pop,
-         Ap7 = pct_asn,
-         Tp7 = pct_tot) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
 #group 8
 dta_asn8 <- dta %>% 
   filter(variable == "A008") %>% 
-  rename(pop8 = pop,
-         Ap8 = pct_asn,
-         Tp8 = pct_tot) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
@@ -198,18 +198,18 @@ dta_asn9 <- dta %>%
 #group 10
 dta_asn10 <- dta %>% 
   filter(variable == "A010") %>% 
-  rename(pop10 = pop,
-         Ap10 = pct_asn,
-         Tp10 = pct_tot) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
 #group 11
 dta_asn11 <- dta %>% 
   filter(variable == "A011") %>% 
-  rename(pop11 = pop,
-         Ap11 = pct_asn,
-         Tp11 = pct_tot) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
@@ -218,42 +218,42 @@ dta_asn12 <- dta %>%
   filter(variable == "A012") %>% 
   left_join(top_asn) %>% 
   dplyr::select(-variable) %>% 
-  rename(pop12 = pop,
-         Ap12 = pct_asn,
-         Tp12 = pct_tot)
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot)
 #group 13
 dta_asn13 <- dta %>% 
   filter(variable == "A013") %>% 
-  rename(pop13 = pop,
-         Ap13 = pct_asn,
-         Tp13 = pct_tot) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
 #group 14
 dta_asn14 <- dta %>% 
   filter(variable == "A014") %>% 
-  rename(pop14 = pop,
-         Ap14 = pct_asn,
-         Tp14 = pct_tot) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
 #group 15
 dta_asn15 <- dta %>% 
   filter(variable == "A015") %>% 
-  rename(pop15 = pop,
-         Ap15 = pct_asn,
-         Tp15 = pct_tot) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
 #group 16
 dta_asn16 <- dta %>% 
   filter(variable == "A016") %>% 
-  rename(pop16 = pop,
-         Ap16 = pct_asn,
-         Tp16 = pct_tot) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
@@ -261,36 +261,36 @@ dta_asn16 <- dta %>%
 #group 17
 dta_asn17 <- dta %>% 
   filter(variable == "A017") %>% 
-  rename(pop17 = pop,
-         Ap17 = pct_asn,
-         Tp17 = pct_tot) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
 #group 18
 dta_asn18 <- dta %>% 
   filter(variable == "A018") %>% 
-  rename(pop18 = pop,
-         Ap18 = pct_asn,
-         Tp18 = pct_tot) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
 #group 19
 dta_asn19 <- dta %>% 
   filter(variable == "A019") %>% 
-  rename(pop19 = pop,
-         Ap19 = pct_asn,
-         Tp19 = pct_tot) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
 #group 20
 dta_asn20 <- dta %>% 
   filter(variable == "A020") %>% 
-  rename(pop20 = pop,
-         Ap20 = pct_asn,
-         Tp20 = pct_tot) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
@@ -299,15 +299,15 @@ dta_asn21 <- dta %>%
   filter(variable == "A021") %>% 
   left_join(top_asn) %>% 
   dplyr::select(-variable) %>% 
-  rename(pop21 = pop,
-         Ap21 = pct_asn,
-         Tp21 = pct_tot)
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot)
 #group 22
 dta_asn22 <- dta %>% 
   filter(variable == "A022") %>% 
-  rename(pop22 = pop,
-         Ap22 = pct_asn,
-         Tp22 = pct_tot) %>% 
+  rename(pop2 = pop,
+         Ap2 = pct_asn,
+         Tp2 = pct_tot) %>% 
   left_join(top_asn_map) %>% 
   dplyr::select(-variable)
 
@@ -393,83 +393,87 @@ final <- final_pop %>%
   left_join(final_lb2) %>% 
   left_join(final_lb3) %>% 
   left_join(top_asn_map)
-merge <- geo_join(combined_generalized, final, "GEOID", "GEOID")
-writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/ff", layer="ff", driver="ESRI Shapefile") # this is in geographical projection
 
+merge <- geo_join(tract_shape, final, "GEOID", "GEOID")
+writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/nv", layer="nv", driver="ESRI Shapefile") # this is in geographical projection
+
+
+#read in selected metro map at census tract level
+tract_shape <- readOGR(dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa_metro", layer = "aa_metro")
 
 
 #top Asian Am in each metro area
-merge <- geo_join(combined_generalized, top_asn_map, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, top_asn, "GEOID", "GEOID")
 writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/topAA", layer="topaa", driver="ESRI Shapefile") # this is in geographical projection
 ##############
 
 #Asian Group 2 - Asian Indian
-merge <- geo_join(combined_generalized, dta_asn2, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn2, "GEOID", "GEOID")
 writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa2", layer="aa2", driver="ESRI Shapefile") # this is in geographical projection
 
 
-merge <- geo_join(combined_generalized, top_asn, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, top_asn, "GEOID", "GEOID")
 writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/topasn", layer="topaa", driver="ESRI Shapefile") # this is in geographical projection
 
 
-merge <- geo_join(combined_generalized, dta_asn3, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn3, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa3", layer = "aa3", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn4, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn4, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa4", layer = "aa4", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn5, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn5, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa5", layer = "aa5", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn6, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn6, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa6", layer = "aa6", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn7, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn7, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa7", layer = "aa7", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn8, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn8, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa8", layer = "aa8", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn9, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn9, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa9", layer = "aa9", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn10, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn10, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa10", layer = "aa10", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn11, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn11, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa11", layer = "aa11", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn12, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn12, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa12", layer = "aa12", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn13, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn13, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa13", layer = "aa13", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn14, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn14, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa14", layer = "aa14", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn15, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn15, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa15", layer = "aa15", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn16, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn16, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa16", layer = "aa16", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn17, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn17, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa17", layer = "aa17", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn18, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn18, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa18", layer = "aa18", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn19, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn19, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa19", layer = "aa19", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn20, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn20, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa20", layer = "aa20", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn21, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn21, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa21", layer = "aa21", driver = "ESRI Shapefile")
 
-merge <- geo_join(combined_generalized, dta_asn22, "GEOID", "GEOID")
+merge <- geo_join(tract_shape, dta_asn22, "GEOID", "GEOID")
 writeOGR(obj = merge, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/aa22", layer = "aa22", driver = "ESRI Shapefile")
 
 rm(dta_asn2, dta_asn3, dta_asn4, dta_asn5, dta_asn6,

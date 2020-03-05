@@ -29,19 +29,13 @@ label2 <- load_variables(year = 2010, dataset = "acs5", cache = TRUE) %>%
 label2[1,2] <- "Asian Am"
 label2[5,2] <- "Chinese"
 
-label <- label %>% left_join(label2)
-# list of state and counties where top MSAs locate ------------------------
-# state_list <- c("CA", "CO", "PA", "NJ", "DE", "MD", "DC", "VA", 
-#                 "WV", "FL", "MO", "IL", "IN", "WI", "MA", "NH", 
-#                 "MI", "MN", "NY", "NC", "SC", "OR", "WA", "TX", 
-#                 "AZ", "HI", "AK", "AR", "UT", "GA", "NV")
-
 #getting city-level list within sacramento metro ready ---------
-CA_cities <- places(state = "CA", cb = TRUE, refresh = TRUE)
-city_generalized = ms_simplify(CA_cities, keep = 0.05)
+# CA_cities <- places(state = "CA", cb = TRUE, refresh = TRUE)
+# city_generalized = ms_simplify(CA_cities, keep = 0.05)
 # writeOGR(obj=city_generalized, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/city_CA", layer="citCA", driver="ESRI Shapefile") # this is in geographical projection
-Sacramento <- core_based_statistical_areas(resolution = "500k", cb = TRUE, refresh = TRUE)
-Sacramento_generalized <- ms_simplify(Sacramento, keep = 0.05)
+
+# Sacramento <- core_based_statistical_areas(resolution = "500k", cb = TRUE, refresh = TRUE)
+# Sacramento_generalized <- ms_simplify(Sacramento, keep = 0.05)
 # writeOGR(obj=Sacramento_generalized, dsn = "/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/2018 acs data/CA_metro", layer="metroCA", driver="ESRI Shapefile") # this is in geographical projection
 library(sf)
 library(rgdal)
@@ -66,11 +60,12 @@ tot_city_2010 <- tot_city_2010 %>%
 #asian pop at city level ------------------------------------
 #2010 data
 data <- get_acs(table = "B02006", year = 2010, geography = "place", state = "CA", summary_var = "B02006_001", cache_table = T)
+
 dta_2010 <- data %>% 
   dplyr::select(GEOID, variable, estimate, summary_est) %>% 
   filter(!variable %in% c("B02006_018", "B02006_019")) %>% 
   left_join(label2) %>% 
-  left_join(tot_city) %>% 
+  left_join(tot_city_2010) %>% 
   left_join(city_dta) %>% 
   filter(is.na(NAME)==F) %>% 
   rename(pop = estimate,
@@ -78,10 +73,18 @@ dta_2010 <- data %>%
   rename(est = pop,
          asn = asn_pop,
          tot = tot_pop) %>% 
-  dplyr::select(GEOID, est, asn, tot, var, NAME) %>% 
+  mutate(pct1 = round((est / asn)*100, digits = 1),
+         pct2 = round((est / tot)*100, digits = 1),
+         pct1 = case_when(
+           asn == 0 ~NA_real_,
+           TRUE ~pct1),
+         pct2 = case_when(
+           tot == 0 ~NA_real_,
+           TRUE ~pct2)) %>% 
+  dplyr::select(GEOID, NAME, est, pct1, pct2, var) %>% 
   gather(key, value, -var, -NAME, -GEOID) %>% 
   mutate(label = paste(var, key, "10", sep = "")) %>% 
-  select(GEOID, NAME, label, value) %>% 
+  dplyr::select(GEOID, label, value) %>% 
   spread(label, value)
 
 top_asn_2010 <- data %>% 
@@ -108,6 +111,7 @@ top_asn_2010 <- data %>%
   
 #2018 data
 data2 <- get_acs(table = "B02015", year = 2018, geography = "place", state = "CA", summary_var = "B02015_001", cache_table = T)
+
 dta_2018 <- data2 %>% 
   dplyr::select(GEOID, variable, estimate, summary_est) %>% 
   filter(!variable %in% c("B02015_004", "B02015_005", "B02015_015", 
@@ -122,10 +126,18 @@ left_join(label) %>%
   rename(est = pop,
          asn = asn_pop,
          tot = tot_pop) %>% 
-  dplyr::select(GEOID, est, asn, tot, var, NAME) %>% 
+  mutate(pct1 = round((est / asn)*100, digits = 1),
+         pct2 = round((est / tot)*100, digits = 1),
+         pct1 = case_when(
+           asn == 0 ~NA_real_,
+           TRUE ~pct1),
+         pct2 = case_when(
+           tot == 0 ~NA_real_,
+           TRUE ~pct2)) %>%
+  dplyr::select(GEOID, est, pct1, pct2, var, NAME) %>% 
   gather(key, value, -var, -NAME, -GEOID) %>% 
   mutate(label = paste(var, key, "18", sep = "")) %>% 
-  select(GEOID, NAME, label, value) %>% 
+  dplyr::select(GEOID, label, value) %>% 
   spread(label, value)
 
 top_asn_2018 <- data2 %>% 
@@ -171,6 +183,8 @@ library(rgeos)
 merge <- geo_join(city_shape, top_asn, "GEOID", "GEOID")
 writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/sacramento_city/topAA_1018", layer="topaa", driver="ESRI Shapefile") # this is in geographical projection
 
+merge <- geo_join(city_shape, dta_final, "GEOID", "GEOID")
+writeOGR(obj=merge, dsn="/Users/sunnyshao/Dropbox/AAPI DATA Desktop/census planning/sacramento_city/AA_1018", layer="aa", driver="ESRI Shapefile") # this is in geographical projection
 
 
 
